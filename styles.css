@@ -1,0 +1,152 @@
+/* 
+#d8b15f - yellow
+#091428 -dark blue
+*/
+
+body {
+    background-color: #091428;
+}
+
+.search-bar {
+    width: 40%;
+    display: block;
+    margin:2%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 1%;
+}
+
+.violation {
+    font-weight: bold;
+}
+
+.container-fluid {
+    padding: 1% 6%;
+}
+
+h2, h3 {
+    color: #fff;
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.8rem;
+}
+
+h3 {
+    font-size: 1.3rem;
+}
+
+p {
+    margin-bottom: 0;
+}
+
+.charge-btn {
+    border-style: none;
+    background-color: #f0bf45;
+    width: 100%;
+    height: 100%;
+    border: 3px solid #000;
+    color: #000;
+    min-height: 6em;
+}
+
+.not-lenient {
+    font-weight: 500;
+}
+
+.cite {
+    background-color: #81c1e6;
+}
+
+.felony {
+    background-color: #E60000;
+}
+
+.notlenient {
+     background-color: #990000;
+ }
+
+ .judge {
+     background-color: #d17600;
+ }
+
+ .warden {
+     background-color: #5c5c5c;
+ }
+
+hr {
+    border-top: #fff 2px solid;
+    width: 90%;
+}
+
+ul {
+    padding: 0;
+    margin-bottom: 0;
+}
+
+li {
+    display: inline;
+    list-style-type: none;
+    text-align: center;
+}
+.charge {
+    padding: 0;
+}
+
+#output{
+    margin: auto;
+    margin-bottom: 2%;
+}
+
+h4 {
+    color: #f0bf45;
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 1%;
+}
+
+table {
+    margin: auto;
+    color: #fff;
+    border: 2px solid #fff;
+    width: 50%;
+}
+
+th {
+    border: 2px solid #fff;
+    text-align: center;
+}
+
+td {
+    text-align: center;
+}
+
+button {
+    border: none;
+    background-color: #091428;
+    color: #fff;
+}
+.container {
+    text-align: center;
+    margin-bottom: 2%;
+}
+
+h5 {
+    color: #f0bf45;
+}
+
+.total {
+    color: #fff;
+}
+
+.deleteCell:hover {
+    cursor: pointer;
+}
+
+.down {
+    position: fixed;
+    bottom: 5%;
+    right: 2%;
+    opacity: 40%;
+}
