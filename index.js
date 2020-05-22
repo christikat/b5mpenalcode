@@ -11,7 +11,6 @@ function getFine(amt) {
     } else {
         fineAmt = parseInt(amt.substr(1, amt.indexOf(" ")));
     }
-    console.log(fineAmt)
     return fineAmt
 }
 
@@ -22,17 +21,16 @@ function getCS(comServ) {
     } else {
         csAmt = parseInt(comServ.substr(0, comServ.indexOf(" ")));
     }
-    console.log(csAmt);
     return csAmt
 }
 
+// Converts jail string into int
 function getJail(jailTime) {
     if (jailTime == 0) {
         jailAmt = 0
     } else {
         jailAmt = parseInt(jailTime.substr(0, jailTime.indexOf(" ")));
     }
-    console.log(jailAmt);
     return jailAmt
 }
 
@@ -41,7 +39,6 @@ let j = 0
 //Click button and it does stuff
 for (i = 0; i < charge.length; i++) {
     charge[i].addEventListener("click", function() {
-        console.log(this.querySelector(".violation").innerHTML);
 
         // Selects CS String
         if(this.querySelector(".cs")!= null) {
@@ -106,6 +103,30 @@ for (i = 0; i < charge.length; i++) {
     });
 }
 
+// Clears everything from table
+const clear = document.querySelector(".clear");
+
+clear.addEventListener("click", function(){
+    for (i = 0; i < table.rows.length + 1; i++) {
+        table.deleteRow(1)
+        i = 1
+
+        csTotal = 0
+        jailTotal = 0
+        fineTotal = 0
+
+        totalcs.textContent = csTotal + " Tasks"
+        totalMonths.textContent = jailTotal + " Months"
+        totalFine.textContent = "$" + fineTotal
+
+        j--
+    }
+})
+
+
+
+
+// function to remove rows from table
 function x(){
     for(i = 1; i < table.rows.length; i ++) {
         del = table.rows[i].cells[4]
@@ -140,18 +161,19 @@ function x(){
 }
 
 
+// Hides elements when using seach bar
 const searchBar = document.forms['search'].querySelector('input');
+
+const violations = document.getElementsByClassName('violation')
+const headers = document.getElementsByTagName('h3')
+const headers2 = document.getElementsByTagName('h2')
+const lines = document.getElementsByTagName('hr')
+const padding = document.getElementsByClassName('container-fluid')
+
 
 searchBar.addEventListener('keyup', function(event){
 
     const term = event.target.value.toLowerCase();
-    console.log(term)
-
-
-    const headers = document.getElementsByTagName('h3')
-    const headers2 = document.getElementsByTagName('h2')
-    const lines = document.getElementsByTagName('hr')
-    const padding = document.getElementsByClassName('container-fluid')
 
     Array.from(padding).forEach(function(container) {
         if(term) {
@@ -200,9 +222,31 @@ searchBar.addEventListener('keyup', function(event){
     })
 })
 
-// const input = document.querySelector('input')
 
-// input.onfocus = function(){
-//     this.value = ''
-//     term =''
-// }
+// Clears the search bar
+const input = document.querySelector('input')
+
+input.onfocus = function(){
+    this.value = ''
+
+    Array.from(violations).forEach(function(violation){
+        violation.parentElement.parentElement.style.display = 'block'
+    })
+
+    Array.from(padding).forEach(function(container) {
+        container.style.paddingTop = '1%'
+        container.style.paddingBottom = '1%'
+    })
+
+    Array.from(headers).forEach(function(header) {
+        header.style.display ='block'
+    })
+
+    Array.from(headers2).forEach(function(header) {
+        header.style.display ='block'
+    })
+
+    Array.from(lines).forEach(function(line) {
+        line.style.display = 'block'
+    })
+}

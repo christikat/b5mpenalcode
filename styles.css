@@ -17,7 +17,7 @@ body {
 }
 
 .violation {
-    font-weight: bold;
+    font-weight: bolder;
 }
 
 .container-fluid {
@@ -64,7 +64,7 @@ p {
 }
 
 .notlenient {
-     background-color: #990000;
+     background-color: #8b0000;
  }
 
  .judge {
@@ -96,7 +96,7 @@ li {
 
 #output{
     margin: auto;
-    margin-bottom: 2%;
+    margin-bottom: 1%;
 }
 
 h4 {
@@ -142,6 +142,24 @@ h5 {
 
 .deleteCell:hover {
     cursor: pointer;
+}
+
+.center {
+    text-align: center;
+    margin-bottom: 2%;
+}
+
+.clear:hover {
+    cursor: pointer;
+}
+
+.clear {
+    display: inline-block;
+    text-align: center;
+    color: #fff;
+    border: 2px solid #fff;
+    padding: 0 0.7em;
+    margin: 0 auto;
 }
 
 .down {
