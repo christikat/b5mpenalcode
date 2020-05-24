@@ -39,7 +39,6 @@ let j = 0
 //Click button and it does stuff
 for (i = 0; i < charge.length; i++) {
     charge[i].addEventListener("click", function() {
-
         // Selects CS String
         if(this.querySelector(".cs")!= null) {
             comServ = (this.querySelector(".cs").innerHTML); 
@@ -103,28 +102,6 @@ for (i = 0; i < charge.length; i++) {
     });
 }
 
-// Clears everything from table
-const clear = document.querySelector(".clear");
-
-clear.addEventListener("click", function(){
-    for (i = 0; i < table.rows.length + 1; i++) {
-        table.deleteRow(1)
-        i = 1
-
-        csTotal = 0
-        jailTotal = 0
-        fineTotal = 0
-
-        totalcs.textContent = csTotal + " Tasks"
-        totalMonths.textContent = jailTotal + " Months"
-        totalFine.textContent = "$" + fineTotal
-
-        j--
-    }
-})
-
-
-
 
 // function to remove rows from table
 function x(){
@@ -151,14 +128,111 @@ function x(){
             fineTotal -= fineValue
             totalFine.textContent = "$" + fineTotal
 
-            console.log(vCell)
-
             table.deleteRow(vCell.rowIndex)
             j--
-            console.log(fineTotal)
         }
     }
 }
+
+// Clears everything from table
+const clear = document.querySelector(".clear");
+
+clear.addEventListener("click", function(){
+    for (i = 0; i < table.rows.length + 1; i++) {
+        table.deleteRow(1)
+        i = 1
+
+        csTotal = 0
+        jailTotal = 0
+        fineTotal = 0
+
+        totalcs.textContent = csTotal + " Tasks"
+        totalMonths.textContent = jailTotal + " Months"
+        totalFine.textContent = "$" + fineTotal
+
+        j--
+    }
+})
+
+// Copies to clipboard
+const copy = document.querySelector('.copy');
+const newText = document.createElement('textarea');
+document.body.appendChild(newText);
+
+let chargeText = 'Charges: \n'
+let chargeArr = []
+
+function arrCount(arr, value) {
+    count = 0 
+    for (i = 0; i < arr.length; i++) {
+        if (arr[i] == value && arr[i].length == value.length) {
+            count++
+        }
+    }
+    return count    
+}
+
+function subStrParam(count){
+    if (count > 9) {
+        return 5
+    } else {
+        return 4
+    }
+}
+
+function chargeMultiplier(charge) {
+    chargeArr.push(charge);
+    
+    
+    if (chargeText.indexOf('\n' + charge) >=0 ){
+
+        arrCount(chargeArr, charge);
+        repeatedCharge = charge
+        s = subStrParam(count)
+
+        multiCharge = chargeText.substr(chargeText.indexOf('\n' + repeatedCharge), repeatedCharge.length + s); 
+        console.log(multiCharge)
+
+        chargeText = chargeText.replace(multiCharge, '\n' + repeatedCharge + ' x' + count);
+        chargeText = chargeText.replace('&gt;', '>')
+
+        
+    } else {
+        chargeText = chargeText + (charge) + ' x1' + '\n'
+    }
+}
+
+function time(cs, prison) {
+    if (prison > 0) {
+        prison = prison + cs/2
+        return prison + ' Months'
+    } else if (cs > 0) {
+        return cs + ' Tasks'
+    } else {
+        return 0
+    }
+}
+
+copy.onclick = function() {
+    for (i = 1; i < table.rows.length; i++) {
+        chargeMultiplier(table.rows[i].cells[0].innerHTML);
+    }
+
+    sentence = time(csTotal,jailTotal)
+    finalText = chargeText + '\nFine: $' + fineTotal + '\n\nSentence: ' + sentence
+
+
+    newText.value = finalText
+    
+    newText.select()
+    document.execCommand('copy');
+
+    chargeArr =[]
+    multiCharge =''
+    chargeText ='Charges: \n'
+    newText.value = ''
+}
+
 
 
 // Hides elements when using seach bar
@@ -249,4 +323,4 @@ input.onfocus = function(){
     Array.from(lines).forEach(function(line) {
         line.style.display = 'block'
     })
-}
+}   
