@@ -197,7 +197,6 @@ function chargeMultiplier(charge) {
     } else {
         chargeText = chargeText + (charge) + ' x1' + '\n'
     }
-    chargeText = chargeText.replace('&gt;', '>')
 }
 
 function time(cs, prison) {
@@ -218,6 +217,7 @@ copy.onclick = function() {
 
     sentence = time(csTotal,jailTotal)
     finalText = chargeText + '\nFine: $' + fineTotal + '\n\nSentence: ' + sentence
+    finalText = finalText.replace(/&gt;/g, '>')
 
 
     newText.value = finalText
