@@ -191,15 +191,13 @@ function chargeMultiplier(charge) {
         s = subStrParam(count)
 
         multiCharge = chargeText.substr(chargeText.indexOf('\n' + repeatedCharge), repeatedCharge.length + s); 
-        console.log(multiCharge)
 
         chargeText = chargeText.replace(multiCharge, '\n' + repeatedCharge + ' x' + count);
-        chargeText = chargeText.replace('&gt;', '>')
-
         
     } else {
         chargeText = chargeText + (charge) + ' x1' + '\n'
     }
+    chargeText = chargeText.replace('&gt;', '>')
 }
 
 function time(cs, prison) {
@@ -323,4 +321,4 @@ input.onfocus = function(){
     Array.from(lines).forEach(function(line) {
         line.style.display = 'block'
     })
-}   
+} 
