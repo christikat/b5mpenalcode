@@ -151,6 +151,21 @@ h5 {
     margin: 0 0.5em;
 }
 
+.toggle {
+    color: #585858;
+    text-align: right;
+    margin-right: 1%;
+}
+
+.toggle-btn {
+    display: inline;
+}
+
+.toggle-btn:hover {
+    cursor: pointer;
+    color: #c1c1c1;
+}
+
 .down {
     position: fixed;
     bottom: 5%;

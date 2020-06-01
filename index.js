@@ -322,3 +322,22 @@ input.onfocus = function(){
         line.style.display = 'block'
     })
 } 
+
+const toggle = document.querySelector(".toggle-btn")
+const hover = document.querySelectorAll(".hover-text")
+
+let status = 'on'
+
+toggle.onclick = function() {
+    if (status === 'on') {
+        Array.from(hover).forEach(function(text) {
+            text.style.display = 'none'
+        })
+        status = 'off'
+    } else {
+        Array.from(hover).forEach(function(text) {
+            text.style.display = 'block'
+        })
+        status = 'on'
+    }
+}
