@@ -71,23 +71,28 @@ for (i = 0; i < charge.length; i++) {
         const table = document.getElementById("table");
         const newRow = table.insertRow(j);
 
-        const violationCell = newRow.insertCell(0)
-        const csCell = newRow.insertCell(1)
-        const jailCell = newRow.insertCell(2)
-        const fineCell = newRow.insertCell(3)
-        const deleteCell = newRow.insertCell(4)
+        const attemptCell = newRow.insertCell(0);
+        const violationCell = newRow.insertCell(1);
+        const csCell = newRow.insertCell(2);
+        const jailCell = newRow.insertCell(3);
+        const fineCell = newRow.insertCell(4);
+        const deleteCell = newRow.insertCell(5);
 
+        attemptCell.innerHTML = '<input type="checkbox" class="attempted"></input>'
         violationCell.innerHTML = this.querySelector(".violation").innerHTML
         csCell.innerHTML = csAmt
         jailCell.innerHTML = jailAmt
         fineCell.innerHTML = "$"+fineAmt
         deleteCell.innerHTML = 'x'
 
+        
         violationCell.classList.add('violationCell');
+        attemptCell.classList.add('attemptCell')
         csCell.classList.add('csCell');
         jailCell.classList.add('jailCell');
         fineCell.classList.add('fineCell');
         deleteCell.classList.add('deleteCell');
+        
 
         const totalcs = document.getElementById("totalcs");
         totalcs.textContent = csTotal + " Tasks"
@@ -99,16 +104,69 @@ for (i = 0; i < charge.length; i++) {
         totalFine.textContent = "$" + fineTotal
 
         x()
+        addAtt()
     });
 }
 
+//fucntion to add attempted charge
+function addAtt() {
+    for(i = 1; i < table.rows.length; i++){
+        add = table.rows[i].cells[0].firstChild
+        
+        add.onchange = function() {
+            aCell = this.parentElement.parentElement
+            
+            if (this.checked) {
+                jailTable = aCell.querySelector('.jailCell').innerHTML
+                csTable = aCell.querySelector('.csCell').innerHTML
+                violation = aCell.querySelector('.violationCell').innerHTML
+
+                //halves jailtime and updates table
+                halfJail = parseInt(jailTable)/2 
+                aCell.querySelector('.jailCell').innerHTML = halfJail
+                
+                //halves cs and updates table
+                halfCs = parseInt(csTable)/2
+                aCell.querySelector('.csCell').innerHTML = halfCs
+                
+                //updates the total
+                jailTotal -= halfJail
+                totalMonths.textContent = jailTotal + " Months"
+                
+                csTotal-= halfCs
+                totalcs.textContent = csTotal + " Tasks"
+
+                aCell.querySelector('.violationCell').innerHTML = "Attempted " + violation
+
+            } else {
+                jailTable = aCell.querySelector('.jailCell').innerHTML
+                csTable = aCell.querySelector('.csCell').innerHTML
+                violation = aCell.querySelector('.violationCell').innerHTML
+
+                //adds back the time if checkbox gets unchecked
+                aCell.querySelector('.jailCell').innerHTML = parseFloat(jailTable)*2
+                aCell.querySelector('.csCell').innerHTML = parseFloat(csTable)*2
+                
+                jailTotal +=parseFloat(jailTable)
+                totalMonths.textContent = jailTotal + " Months"
+
+                //updates total
+                csTotal += parseFloat(csTable)
+                totalcs.textContent = csTotal + " Tasks"
+
+                aCell.querySelector('.violationCell').innerHTML = violation.replace('Attempted ', '')
+            }
+        }
+    }
+}
 
 // function to remove rows from table
-function x(){
-    for(i = 1; i < table.rows.length; i ++) {
-        del = table.rows[i].cells[4]
+function x() {
+    for(i = 1; i < table.rows.length; i++) {
+        del = table.rows[i].cells[5]
+        
         del.onclick = function() {
-            vCell = this.parentElement 
+            vCell = this.parentElement
 
             // Removes cs from total
             csValue = vCell.querySelector('.csCell').innerHTML
@@ -212,7 +270,7 @@ function time(cs, prison) {
 
 copy.onclick = function() {
     for (i = 1; i < table.rows.length; i++) {
-        chargeMultiplier(table.rows[i].cells[0].innerHTML);
+        chargeMultiplier(table.rows[i].cells[1].innerHTML);
     }
 
     sentence = time(csTotal,jailTotal)

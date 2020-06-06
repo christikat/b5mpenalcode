@@ -12,6 +12,26 @@
     <div class="toggle">
         <p class="toggle-btn">Toggle Descriptions</p>
     </div>
+
+    <input type="checkbox" class="openSidebarMenu" id="openSidebarMenu">
+    
+    <label for="openSidebarMenu" class="sidebarIconToggle"> 
+        <div class="spinner diagonal part-1"></div>
+        <div class="spinner horizontal"></div>
+        <div class="spinner diagonal part-2"></div>
+    </label>
+    
+    <div id="sidebarMenu">
+        <ul class="sidebarMenuInner">
+            <li><a href="https://docs.google.com/spreadsheets/d/1nYCj5cRM_Do3k-NvdPxretsGUgBYFvgRPZrDLFyDUNs/edit?usp=sharing" target="_blank">Penal Code Spreadsheet</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1U9ORWrKCUDb7cZyhPxCUq-WjkF6oyyTdvYgsnPQANuU/edit?usp=sharing" target="_blank">10 Codes</a></li>
+            <li><a href="https://docs.google.com/document/d/1AaChjLPf6YafHzsBIO9cZEEQRsMKYyNTT__6CWwHW2s/edit?usp=sharing" target="_blank">Standard Operating Procedures</a></li>
+            <li><a href="https://docs.google.com/document/d/1iAlHtMW0OKOnqWhElhEXUN90rIMVejqdDD8XUukMcDY/edit?usp=sharing" target="_blank">Commands & Hot Keys</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1-GkjmTnBfjiYcPSUX9G2Jc7Rrv0ioZHjgd2Y7xXtWfI/edit?usp=sharing" target="_blank">Roster</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1w-JvGies4MJclF4QtVhvWiQSNWnqZEo8IkoJFmqMewY/edit#gid=1482808375" target="_blank">Uniform Policy</a></li>
+            <li><a href="https://docs.google.com/document/d/1SClTZF7mWZNEiCFe57IQrMQJUpFt-9MXCOEEns5m7do/edit?usp=sharing" target="_blank">MDT Guide</a></li>
+        </ul>
+    </div>
     
     <form id="search">
         <input class="search-bar" type="text" placeholder="Search Penal Code">
@@ -1572,11 +1592,12 @@
     <h4>List of Charges</h4>
     <table id="table">
         <tr>
-            <th>Violation</th>
-            <th>CS</th>
-            <th>Jail</th>
-            <th>Fine</th>
-            <th>x</th>
+            <th class="att-head">Attempted</th>
+            <th class="viol-head">Violation</th>
+            <th class="cs-head">CS</th>
+            <th class="jail-head">Jail</th>
+            <th class="fine-head">Fine</th>
+            <th class="x-head">x</th>
         </tr>
     </table>
 </div>
@@ -1594,7 +1615,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-4">
-            <h5>Community Service</h5>
+            <h5>Total Community Service</h5>
             <p class="total" id="totalcs">0 Tasks</p>
         </div>
 
