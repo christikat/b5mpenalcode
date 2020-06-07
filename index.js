@@ -119,6 +119,7 @@ function addAtt() {
             if (this.checked) {
                 jailTable = aCell.querySelector('.jailCell').innerHTML
                 csTable = aCell.querySelector('.csCell').innerHTML
+                fineTable = aCell.querySelector('.fineCell').innerHTML.replace('$','')
                 violation = aCell.querySelector('.violationCell').innerHTML
 
                 //halves jailtime and updates table
@@ -128,6 +129,10 @@ function addAtt() {
                 //halves cs and updates table
                 halfCs = parseInt(csTable)/2
                 aCell.querySelector('.csCell').innerHTML = halfCs
+
+                //halves fine and updates table
+                halfFine = parseInt(fineTable)/2
+                aCell.querySelector('.fineCell').innerHTML = '$' + halfFine
                 
                 //updates the total
                 jailTotal -= halfJail
@@ -136,23 +141,31 @@ function addAtt() {
                 csTotal-= halfCs
                 totalcs.textContent = csTotal + " Tasks"
 
+                fineTotal -= halfFine
+                totalFine.textContent = '$' + fineTotal
+
                 aCell.querySelector('.violationCell').innerHTML = "Attempted " + violation
 
             } else {
                 jailTable = aCell.querySelector('.jailCell').innerHTML
                 csTable = aCell.querySelector('.csCell').innerHTML
+                fineTable = aCell.querySelector('.fineCell').innerHTML.replace('$','')
                 violation = aCell.querySelector('.violationCell').innerHTML
 
                 //adds back the time if checkbox gets unchecked
                 aCell.querySelector('.jailCell').innerHTML = parseFloat(jailTable)*2
                 aCell.querySelector('.csCell').innerHTML = parseFloat(csTable)*2
+                aCell.querySelector('.fineCell').innerHTML = '$' + parseFloat(fineTable)*2
                 
+                //updates total
                 jailTotal +=parseFloat(jailTable)
                 totalMonths.textContent = jailTotal + " Months"
 
-                //updates total
                 csTotal += parseFloat(csTable)
                 totalcs.textContent = csTotal + " Tasks"
+
+                fineTotal += parseFloat(fineTable)
+                totalFine.textContent = '$' + fineTotal
 
                 aCell.querySelector('.violationCell').innerHTML = violation.replace('Attempted ', '')
             }
