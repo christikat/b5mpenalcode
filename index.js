@@ -34,6 +34,15 @@ function getJail(jailTime) {
     return jailAmt
 }
 
+function getAddOn (addOnTime) {
+    if (addOnTime == 0) {
+        addAmt = 0
+    } else {
+        addAmt = parseInt(addOnTime.substr(1, addOnTime.length));
+    }
+    return addAmt
+}
+
 let j = 0
 
 //Click button and it does stuff
@@ -54,12 +63,21 @@ for (i = 0; i < charge.length; i++) {
         } else {
             jailTime = 0
         }
+
         jailAmt = getJail(jailTime);
 
 
+        //Selects Addon String
+        if(this.querySelector(".addon") != null) {
+            addOnTime = (this.querySelector('.addon').innerHTML);
+        } else {
+            addOnTime = 0
+        }
+
+        addOnAmt = getAddOn(addOnTime)
+
         // Selects Fine String
         const amt = (this.querySelector(".fine").innerHTML);
-        
         fineAmt = getFine(amt)
 
         csTotal += csAmt
@@ -73,19 +91,22 @@ for (i = 0; i < charge.length; i++) {
 
         const attemptCell = newRow.insertCell(0);
         const violationCell = newRow.insertCell(1);
-        const csCell = newRow.insertCell(2);
-        const jailCell = newRow.insertCell(3);
-        const fineCell = newRow.insertCell(4);
-        const deleteCell = newRow.insertCell(5);
+        const addOnCell = newRow.insertCell(2);
+        const csCell = newRow.insertCell(3);
+        const jailCell = newRow.insertCell(4);
+        const fineCell = newRow.insertCell(5);
+        const deleteCell = newRow.insertCell(6);
 
         attemptCell.innerHTML = '<input type="checkbox" class="attempted"></input>'
         violationCell.innerHTML = this.querySelector(".violation").innerHTML
+        addOnCell.innerHTML = `<input type="checkbox" class="addonCharge" value="${addOnAmt}" value2="${csAmt}" value3="${jailAmt}"></input>`
         csCell.innerHTML = csAmt
         jailCell.innerHTML = jailAmt
         fineCell.innerHTML = "$"+fineAmt
         deleteCell.innerHTML = 'x'
 
         
+        addOnCell.classList.add('addOnCell');
         violationCell.classList.add('violationCell');
         attemptCell.classList.add('attemptCell')
         csCell.classList.add('csCell');
@@ -105,10 +126,65 @@ for (i = 0; i < charge.length; i++) {
 
         x()
         addAtt()
+        addOnCharge()
     });
 }
 
-//fucntion to add attempted charge
+
+//function to create add on charge
+function addOnCharge() {
+    for(i = 1; i < table.rows.length; i++){
+        addOn = table.rows[i].cells[2].firstChild
+        
+        addOn.onchange = function() {
+            adCell = this.parentElement.parentElement
+
+            if (this.checked) {
+                addOnCS = adCell.querySelector('.csCell').innerHTML
+                addOnJail = adCell.querySelector('.jailCell').innerHTML
+                
+                addOnValue = this.getAttribute("value")
+                csValue = this.getAttribute("value2")
+                jailValue = this.getAttribute("value3")
+
+                if (addOnCS != 0) {
+                    adCell.querySelector('.csCell').innerHTML = addOnValue
+                    
+                    //updates the total cs
+                    csTotal -= (csValue-addOnValue)
+                    totalcs.textContent = csTotal + " Tasks"
+
+                } else {
+                    adCell.querySelector('.jailCell').innerHTML = addOnValue
+
+                    //updates the total jailtime
+                    jailTotal -= (jailValue-addOnValue)
+                    totalMonths.textContent = jailTotal + " Months"
+                }
+            //updates the table when unchecking
+            } else {
+                addOnCS = adCell.querySelector('.csCell').innerHTML
+                addOnJail = adCell.querySelector('.jailCell').innerHTML
+                
+                addOnValue = this.getAttribute("value")
+                csValue = this.getAttribute("value2")
+                jailValue = this.getAttribute("value3")
+
+                if (addOnCS != 0) {
+                    adCell.querySelector('.csCell').innerHTML = csValue
+                    csTotal += (csValue-addOnValue)
+                    totalcs.textContent = csTotal + " Tasks"
+                } else {
+                    adCell.querySelector('.jailCell').innerHTML = jailValue
+                    jailTotal += (jailValue-addOnValue)
+                    totalMonths.textContent = jailTotal + " Months"
+                }
+            }
+        }
+    }
+} 
+
+//function to add attempted charge
 function addAtt() {
     for(i = 1; i < table.rows.length; i++){
         add = table.rows[i].cells[0].firstChild
@@ -176,7 +252,7 @@ function addAtt() {
 // function to remove rows from table
 function x() {
     for(i = 1; i < table.rows.length; i++) {
-        del = table.rows[i].cells[5]
+        del = table.rows[i].cells[6]
         
         del.onclick = function() {
             vCell = this.parentElement

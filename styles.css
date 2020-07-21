@@ -182,6 +182,10 @@ p {
      background-color: #5c5c5c;
  }
 
+ .other-charge {
+     background-color: #492ecb;
+ }
+
 hr {
     border-top: #fff 2px solid;
     width: 90%;
@@ -217,7 +221,7 @@ table {
     margin: auto;
     color: #fff;
     border: 2px solid #fff;
-    width: 50%;
+    width: 72%;
 }
 
 th {
@@ -242,10 +246,14 @@ h5 {
     color: #fff;
 }
 
+
 .att-head {
-    width: 15%;
+    width: 10%;
 }
 
+.addon-head {
+    width: 10%;
+}
 .cs-head {
     width: 10%;
 }
@@ -336,6 +344,6 @@ textarea {
     visibility: visible;
 }
 
-.attempted:hover {
+.attempted:hover, .addonCharge:hover {
     cursor: pointer;
 }
