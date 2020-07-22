@@ -232,12 +232,12 @@ function addOnCharge() {
                         csTotal += (csValue-addOnValue)
                         totalcs.textContent = csTotal + " Tasks"
                     } else if (attempt.checked && addOnJail !=0) {
-                        adCell.querySelector('jailCell').innerHTML = jailValue/2
+                        adCell.querySelector('.jailCell').innerHTML = jailValue/2
                         jailTotal += (jailValue-addOnValue)/2
                         totalMonths.textContent = jailTotal + " Months"
                     } else {                        
                         adCell.querySelector('.jailCell').innerHTML = jailValue
-                        jailTotal += (jailValue-addOnValue)
+                        jailTotal -= (jailValue-addOnValue)
                         totalMonths.textContent = jailTotal + " Months"
                     }
                 }
