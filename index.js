@@ -92,27 +92,72 @@ for (i = 0; i < charge.length; i++) {
         const attemptCell = newRow.insertCell(0);
         const violationCell = newRow.insertCell(1);
         const addOnCell = newRow.insertCell(2);
-        const csCell = newRow.insertCell(3);
-        const jailCell = newRow.insertCell(4);
-        const fineCell = newRow.insertCell(5);
-        const deleteCell = newRow.insertCell(6);
+        const gunCell = newRow.insertCell(3)        
+        const csCell = newRow.insertCell(4);
+        const jailCell = newRow.insertCell(5);
+        const fineCell = newRow.insertCell(6);
+        const xCell = newRow.insertCell(7);
 
         attemptCell.innerHTML = '<input type="checkbox" class="attempted"></input>'
         violationCell.innerHTML = this.querySelector(".violation").innerHTML
+
+        if(this.querySelector('.not-lenient')) {
+            violationCell.classList.add('notlenient-font')
+        }
+
         addOnCell.innerHTML = `<input type="checkbox" class="addonCharge" value="${addOnAmt}" value2="${csAmt}" value3="${jailAmt}"></input>`
-        csCell.innerHTML = csAmt
-        jailCell.innerHTML = jailAmt
-        fineCell.innerHTML = "$"+fineAmt
-        deleteCell.innerHTML = 'x'
+
+        if(this.classList.contains("revoke")) {
+            gunCell.innerHTML = "Revoke"
+        } else {
+            gunCell.innerHTML = "Keep"
+        }
+
+        if(this.classList.contains("use-revoke")) {
+            gunCell.innerHTML = "Revoke If Used"
+        }
+        
+        if(this.classList.contains("aiding") || this.classList.contains("judge") || this.classList.contains("warden") || this.classList.contains("hold") || this.classList.contains("deport")) {
+            for (i = 0; i < 3; i++) {
+                newRow.deleteCell(4);
+            } if(this.classList.contains("aiding")) {
+                aidingCell = newRow.insertCell(4);
+                aidingCell.setAttribute('colspan', 3);
+                aidingCell.innerHTML = "100% Time/Fine of Associated Charge"
+            } else if(this.classList.contains("judge")) {
+                judgeCell = newRow.insertCell(4);
+                judgeCell.setAttribute('colspan', 3);
+                judgeCell.innerHTML = "Sentencing at Discretion of Judge"
+            } else if(this.classList.contains("warden")) {
+                wardenCell = newRow.insertCell(4);
+                wardenCell.setAttribute('colspan',3);
+                wardenCell.innerHTML = "Sentencing at Discretion of Warden"
+            } else if(this.classList.contains("hold")) {
+                holdCell = newRow.insertCell(4);
+                holdCell.setAttribute('colspan', 3);
+                holdCell.innerHTML = "Hold Until Trial"
+            } else if(this.classList.contains("deport")) {
+                deportCell = newRow.insertCell(4);
+                deportCell.setAttribute('colspan', 3);
+                deportCell.innerHTML = "Permanent Deportation"
+            }
+        } else {
+            csCell.innerHTML = csAmt
+            jailCell.innerHTML = jailAmt
+            fineCell.innerHTML = "$"+fineAmt
+        }
+        
+        xCell.innerHTML = 'x'
 
         
         addOnCell.classList.add('addOnCell');
         violationCell.classList.add('violationCell');
-        attemptCell.classList.add('attemptCell')
+        attemptCell.classList.add('attemptCell');
+        gunCell.classList.add('gunCell')
         csCell.classList.add('csCell');
         jailCell.classList.add('jailCell');
         fineCell.classList.add('fineCell');
-        deleteCell.classList.add('deleteCell');
+        xCell.classList.add('xCell');
         
 
         const totalcs = document.getElementById("totalcs");
@@ -140,44 +185,61 @@ function addOnCharge() {
             adCell = this.parentElement.parentElement
 
             if (this.checked) {
-                addOnCS = adCell.querySelector('.csCell').innerHTML
-                addOnJail = adCell.querySelector('.jailCell').innerHTML
-                
-                addOnValue = this.getAttribute("value")
-                csValue = this.getAttribute("value2")
-                jailValue = this.getAttribute("value3")
-
-                if (addOnCS != 0) {
-                    adCell.querySelector('.csCell').innerHTML = addOnValue
+                if(adCell.querySelector('.csCell') != null) {
+                    addOnCS = adCell.querySelector('.csCell').innerHTML
+                    addOnJail = adCell.querySelector('.jailCell').innerHTML
+                    attempt = adCell.querySelector('.attempted')
                     
-                    //updates the total cs
-                    csTotal -= (csValue-addOnValue)
-                    totalcs.textContent = csTotal + " Tasks"
-
-                } else {
-                    adCell.querySelector('.jailCell').innerHTML = addOnValue
-
-                    //updates the total jailtime
-                    jailTotal -= (jailValue-addOnValue)
-                    totalMonths.textContent = jailTotal + " Months"
+                    addOnValue = this.getAttribute("value")
+                    csValue = this.getAttribute("value2")
+                    jailValue = this.getAttribute("value3")
+                    
+                    if (attempt.checked && addOnCS != 0) {
+                        adCell.querySelector('.csCell').innerHTML = addOnValue/2
+                        csTotal -= addOnValue/2
+                        totalcs.textContent = csTotal + " Tasks"
+                    } else if (attempt.checked == false && addOnCS != 0) {
+                        adCell.querySelector('.csCell').innerHTML = addOnValue
+                        csTotal -= (csValue-addOnValue)
+                        totalcs.textContent = csTotal + " Tasks"    
+                    } else if (attempt.checked && addOnJail != 0) {
+                        adCell.querySelector('.jailCell').innerHTML = addOnValue/2
+                        jailTotal -= addOnValue/2
+                        totalMonths.textContent = jailTotal + " Months"
+                    } else {
+                        adCell.querySelector('.jailCell').innerHTML = addOnValue
+                        jailTotal -= (jailValue-addOnValue)
+                        totalMonths.textContent = jailTotal + " Months"
+                    }
                 }
             //updates the table when unchecking
             } else {
-                addOnCS = adCell.querySelector('.csCell').innerHTML
-                addOnJail = adCell.querySelector('.jailCell').innerHTML
-                
-                addOnValue = this.getAttribute("value")
-                csValue = this.getAttribute("value2")
-                jailValue = this.getAttribute("value3")
-
-                if (addOnCS != 0) {
-                    adCell.querySelector('.csCell').innerHTML = csValue
-                    csTotal += (csValue-addOnValue)
-                    totalcs.textContent = csTotal + " Tasks"
-                } else {
-                    adCell.querySelector('.jailCell').innerHTML = jailValue
-                    jailTotal += (jailValue-addOnValue)
-                    totalMonths.textContent = jailTotal + " Months"
+                if(adCell.querySelector('.csCell') != null) {
+                    addOnCS = adCell.querySelector('.csCell').innerHTML
+                    addOnJail = adCell.querySelector('.jailCell').innerHTML
+                    attempt = adCell.querySelector('.attempted')
+                    
+                    addOnValue = this.getAttribute("value")
+                    csValue = this.getAttribute("value2")
+                    jailValue = this.getAttribute("value3")
+    
+                    if (attempt.checked && addOnCS != 0) {
+                        adCell.querySelector('.csCell').innerHTML = csValue/2
+                        csTotal += (csValue-addOnValue)/2
+                        totalcs.textContent = csTotal + " Tasks"
+                    } else if (attempt.checked == false && addOnCS !=0) {
+                        adCell.querySelector('.csCell').innerHTML = csValue
+                        csTotal += (csValue-addOnValue)
+                        totalcs.textContent = csTotal + " Tasks"
+                    } else if (attempt.checked && addOnJail !=0) {
+                        adCell.querySelector('jailCell').innerHTML = jailValue/2
+                        jailTotal += (jailValue-addOnValue)/2
+                        totalMonths.textContent = jailTotal + " Months"
+                    } else {                        
+                        adCell.querySelector('.jailCell').innerHTML = jailValue
+                        jailTotal += (jailValue-addOnValue)
+                        totalMonths.textContent = jailTotal + " Months"
+                    }
                 }
             }
         }
@@ -193,57 +255,61 @@ function addAtt() {
             aCell = this.parentElement.parentElement
             
             if (this.checked) {
-                jailTable = aCell.querySelector('.jailCell').innerHTML
-                csTable = aCell.querySelector('.csCell').innerHTML
-                fineTable = aCell.querySelector('.fineCell').innerHTML.replace('$','')
-                violation = aCell.querySelector('.violationCell').innerHTML
-
-                //halves jailtime and updates table
-                halfJail = parseInt(jailTable)/2 
-                aCell.querySelector('.jailCell').innerHTML = halfJail
-                
-                //halves cs and updates table
-                halfCs = parseInt(csTable)/2
-                aCell.querySelector('.csCell').innerHTML = halfCs
-
-                //halves fine and updates table
-                halfFine = parseInt(fineTable)/2
-                aCell.querySelector('.fineCell').innerHTML = '$' + halfFine
-                
-                //updates the total
-                jailTotal -= halfJail
-                totalMonths.textContent = jailTotal + " Months"
-                
-                csTotal-= halfCs
-                totalcs.textContent = csTotal + " Tasks"
-
-                fineTotal -= halfFine
-                totalFine.textContent = '$' + fineTotal
-
-                aCell.querySelector('.violationCell').innerHTML = "Attempted " + violation
+                if(aCell.querySelector('.csCell') != null) {
+                    jailTable = aCell.querySelector('.jailCell').innerHTML
+                    csTable = aCell.querySelector('.csCell').innerHTML
+                    fineTable = aCell.querySelector('.fineCell').innerHTML.replace('$','')
+                    violation = aCell.querySelector('.violationCell').innerHTML
+    
+                    //halves jailtime and updates table
+                    halfJail = parseInt(jailTable)/2 
+                    aCell.querySelector('.jailCell').innerHTML = halfJail
+                    
+                    //halves cs and updates table
+                    halfCs = parseInt(csTable)/2
+                    aCell.querySelector('.csCell').innerHTML = halfCs
+    
+                    //halves fine and updates table
+                    halfFine = parseInt(fineTable)/2
+                    aCell.querySelector('.fineCell').innerHTML = '$' + halfFine
+                    
+                    //updates the total
+                    jailTotal -= halfJail
+                    totalMonths.textContent = jailTotal + " Months"
+                    
+                    csTotal-= halfCs
+                    totalcs.textContent = csTotal + " Tasks"
+    
+                    fineTotal -= halfFine
+                    totalFine.textContent = '$' + fineTotal
+    
+                    aCell.querySelector('.violationCell').innerHTML = "Attempted " + violation
+                }
 
             } else {
-                jailTable = aCell.querySelector('.jailCell').innerHTML
-                csTable = aCell.querySelector('.csCell').innerHTML
-                fineTable = aCell.querySelector('.fineCell').innerHTML.replace('$','')
-                violation = aCell.querySelector('.violationCell').innerHTML
-
-                //adds back the time if checkbox gets unchecked
-                aCell.querySelector('.jailCell').innerHTML = parseFloat(jailTable)*2
-                aCell.querySelector('.csCell').innerHTML = parseFloat(csTable)*2
-                aCell.querySelector('.fineCell').innerHTML = '$' + parseFloat(fineTable)*2
-                
-                //updates total
-                jailTotal +=parseFloat(jailTable)
-                totalMonths.textContent = jailTotal + " Months"
-
-                csTotal += parseFloat(csTable)
-                totalcs.textContent = csTotal + " Tasks"
-
-                fineTotal += parseFloat(fineTable)
-                totalFine.textContent = '$' + fineTotal
-
-                aCell.querySelector('.violationCell').innerHTML = violation.replace('Attempted ', '')
+                if(aCell.querySelector('.csCell') != null) {
+                    jailTable = aCell.querySelector('.jailCell').innerHTML
+                    csTable = aCell.querySelector('.csCell').innerHTML
+                    fineTable = aCell.querySelector('.fineCell').innerHTML.replace('$','')
+                    violation = aCell.querySelector('.violationCell').innerHTML
+    
+                    //adds back the time if checkbox gets unchecked
+                    aCell.querySelector('.jailCell').innerHTML = parseFloat(jailTable)*2
+                    aCell.querySelector('.csCell').innerHTML = parseFloat(csTable)*2
+                    aCell.querySelector('.fineCell').innerHTML = '$' + parseFloat(fineTable)*2
+                    
+                    //updates total
+                    jailTotal +=parseFloat(jailTable)
+                    totalMonths.textContent = jailTotal + " Months"
+    
+                    csTotal += parseFloat(csTable)
+                    totalcs.textContent = csTotal + " Tasks"
+    
+                    fineTotal += parseFloat(fineTable)
+                    totalFine.textContent = '$' + fineTotal
+    
+                    aCell.querySelector('.violationCell').innerHTML = violation.replace('Attempted ', '')
+                }
             }
         }
     }
@@ -252,28 +318,32 @@ function addAtt() {
 // function to remove rows from table
 function x() {
     for(i = 1; i < table.rows.length; i++) {
-        del = table.rows[i].cells[6]
+        lastCell = table.rows[i].cells.length - 1
+        del = table.rows[i].cells[lastCell]
         
         del.onclick = function() {
             vCell = this.parentElement
 
-            // Removes cs from total
-            csValue = vCell.querySelector('.csCell').innerHTML
-            csValue = parseInt(csValue)
-            csTotal -= csValue
-            totalcs.textContent = csTotal + " Tasks"
 
-            // Removes jail from total
-            jailValue = vCell.querySelector('.jailCell').innerHTML
-            jailValue = parseInt(jailValue)
-            jailTotal -= jailValue
-            totalMonths.textContent = jailTotal + " Months"
-
-            // Removes fine from total
-            fineValue = vCell.querySelector('.fineCell').innerHTML
-            fineValue = fineValue.substr(1, fineValue.length)
-            fineTotal -= fineValue
-            totalFine.textContent = "$" + fineTotal
+            if(vCell.querySelector('.csCell') != null) {
+                // Removes cs from total
+                csValue = vCell.querySelector('.csCell').innerHTML
+                csValue = parseInt(csValue)
+                csTotal -= csValue
+                totalcs.textContent = csTotal + " Tasks"
+    
+                // Removes jail from total
+                jailValue = vCell.querySelector('.jailCell').innerHTML
+                jailValue = parseInt(jailValue)
+                jailTotal -= jailValue
+                totalMonths.textContent = jailTotal + " Months"
+    
+                // Removes fine from total
+                fineValue = vCell.querySelector('.fineCell').innerHTML
+                fineValue = fineValue.substr(1, fineValue.length)
+                fineTotal -= fineValue
+                totalFine.textContent = "$" + fineTotal
+            }
 
             table.deleteRow(vCell.rowIndex)
             j--

@@ -254,6 +254,11 @@ h5 {
 .addon-head {
     width: 10%;
 }
+
+.license-head {
+    width: 10%;
+}
+
 .cs-head {
     width: 10%;
 }
@@ -270,8 +275,12 @@ h5 {
     width: 3%;
 }
 
-.deleteCell:hover {
+.xCell:hover {
     cursor: pointer;
+}
+
+.notlenient-font {
+    color: #E60000;
 }
 
 .center {
