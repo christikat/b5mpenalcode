@@ -237,7 +237,7 @@ function addOnCharge() {
                         totalMonths.textContent = jailTotal + " Months"
                     } else {                        
                         adCell.querySelector('.jailCell').innerHTML = jailValue
-                        jailTotal -= (jailValue-addOnValue)
+                        jailTotal += (jailValue-addOnValue)
                         totalMonths.textContent = jailTotal + " Months"
                     }
                 }
