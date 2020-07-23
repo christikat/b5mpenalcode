@@ -196,7 +196,7 @@ function addOnCharge() {
                     
                     if (attempt.checked && addOnCS != 0) {
                         adCell.querySelector('.csCell').innerHTML = addOnValue/2
-                        csTotal -= (csValue-addOnValue)/2
+                        csTotal -= parseInt(csValue-addOnValue)/2
                         totalcs.textContent = csTotal + " Tasks"
                     } else if (attempt.checked == false && addOnCS != 0) {
                         adCell.querySelector('.csCell').innerHTML = addOnValue
@@ -204,7 +204,7 @@ function addOnCharge() {
                         totalcs.textContent = csTotal + " Tasks"    
                     } else if (attempt.checked && addOnJail != 0) {
                         adCell.querySelector('.jailCell').innerHTML = addOnValue/2
-                        jailTotal -= (jailValue-addOnValue)/2
+                        jailTotal -= parseInt(jailValue-addOnValue)/2
                         totalMonths.textContent = jailTotal + " Months"
                     } else {
                         adCell.querySelector('.jailCell').innerHTML = addOnValue
