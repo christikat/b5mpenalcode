@@ -513,7 +513,7 @@ searchBar.addEventListener('keyup', function(event){
 
 
 // Clears the search bar
-const input = document.querySelector('input')
+const input = document.querySelector('#search-bar')
 
 input.onfocus = function(){
     this.value = ''
