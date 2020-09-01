@@ -2,6 +2,7 @@ const charge = document.querySelectorAll(".charge-btn");
 
 let fineTotal = 0
 let csTotal = 0
+let nonLenientTotal = 0
 let jailTotal = 0
 
 // Converts fine string into an int
@@ -101,10 +102,6 @@ for (i = 0; i < charge.length; i++) {
         attemptCell.innerHTML = '<input type="checkbox" class="attempted"></input>'
         violationCell.innerHTML = this.querySelector(".violation").innerHTML
 
-        if(this.querySelector('.not-lenient')) {
-            violationCell.classList.add('notlenient-font')
-        }
-
         addOnCell.innerHTML = `<input type="checkbox" class="addonCharge" value="${addOnAmt}" value2="${csAmt}" value3="${jailAmt}"></input>`
 
         if(this.classList.contains("revoke")) {
@@ -131,7 +128,7 @@ for (i = 0; i < charge.length; i++) {
             } else if(this.classList.contains("warden")) {
                 wardenCell = newRow.insertCell(4);
                 wardenCell.setAttribute('colspan',3);
-                wardenCell.innerHTML = "Sentencing at Discretion of Warden"
+                wardenCell.innerHTML = "10 Months Added to Sentence per Item of Contraband"
             } else if(this.classList.contains("hold")) {
                 holdCell = newRow.insertCell(4);
                 holdCell.setAttribute('colspan', 3);
@@ -143,13 +140,17 @@ for (i = 0; i < charge.length; i++) {
             }
         } else {
             csCell.innerHTML = csAmt
+
+            if(this.querySelector('.not-lenient')) {
+                jailCell.classList.add('nonLenientCell')
+            }
+
             jailCell.innerHTML = jailAmt
             fineCell.innerHTML = "$"+fineAmt
         }
         
         xCell.innerHTML = 'x'
 
-        
         addOnCell.classList.add('addOnCell');
         violationCell.classList.add('violationCell');
         attemptCell.classList.add('attemptCell');
@@ -158,10 +159,16 @@ for (i = 0; i < charge.length; i++) {
         jailCell.classList.add('jailCell');
         fineCell.classList.add('fineCell');
         xCell.classList.add('xCell');
-        
 
+        if (this.querySelector('.not-lenient') && isFinite(parseInt(jailCell.innerHTML))) {
+            nonLenientTotal += parseInt(jailCell.innerHTML)
+        }
+    
         const totalcs = document.getElementById("totalcs");
         totalcs.textContent = csTotal + " Tasks"
+
+        const totalNonLenient = document.getElementById("totalNonLenient");
+        totalNonLenient.textContent = nonLenientTotal + " Months"
         
         const totalMonths = document.getElementById("totalMonths");
         totalMonths.textContent = jailTotal + " Months"
@@ -206,10 +213,21 @@ function addOnCharge() {
                         adCell.querySelector('.jailCell').innerHTML = addOnValue/2
                         jailTotal -= parseInt(jailValue-addOnValue)/2
                         totalMonths.textContent = jailTotal + " Months"
+                        
+                        if(adCell.querySelector('.nonLenientCell')) {
+                            nonLenientTotal -= parseInt(jailValue-addOnValue)/2
+                            totalNonLenient.textContent = nonLenientTotal + " Months"
+                        }
+
                     } else {
                         adCell.querySelector('.jailCell').innerHTML = addOnValue
                         jailTotal -= (jailValue-addOnValue)
                         totalMonths.textContent = jailTotal + " Months"
+
+                        if(adCell.querySelector('.nonLenientCell')) {
+                           nonLenientTotal -=(jailValue-addOnValue)
+                           totalNonLenient.textContent = nonLenientTotal + " Months" 
+                        }
                     }
                 }
             //updates the table when unchecking
@@ -235,10 +253,21 @@ function addOnCharge() {
                         adCell.querySelector('.jailCell').innerHTML = jailValue/2
                         jailTotal += (jailValue-addOnValue)/2
                         totalMonths.textContent = jailTotal + " Months"
+
+                        if(adCell.querySelector('.nonLenientCell')) {
+                            nonLenientTotal += parseInt(jailValue-addOnValue)/2
+                            totalNonLenient.textContent = nonLenientTotal + " Months"
+                        }
+
                     } else {                        
                         adCell.querySelector('.jailCell').innerHTML = jailValue
                         jailTotal += (jailValue-addOnValue)
                         totalMonths.textContent = jailTotal + " Months"
+                        
+                        if(adCell.querySelector('.nonLenientCell')) {
+                            nonLenientTotal +=(jailValue-addOnValue)
+                            totalNonLenient.textContent = nonLenientTotal + " Months" 
+                         }
                     }
                 }
             }
@@ -274,6 +303,11 @@ function addAtt() {
                     aCell.querySelector('.fineCell').innerHTML = '$' + halfFine
                     
                     //updates the total
+                    if(aCell.querySelector('.nonLenientCell')) {
+                        nonLenientTotal -= halfJail
+                        totalNonLenient.textContent = nonLenientTotal + " Months"
+                    }
+
                     jailTotal -= halfJail
                     totalMonths.textContent = jailTotal + " Months"
                     
@@ -299,6 +333,12 @@ function addAtt() {
                     aCell.querySelector('.fineCell').innerHTML = '$' + parseFloat(fineTable)*2
                     
                     //updates total
+                    
+                    if(aCell.querySelector('.nonLenientCell')) {
+                        nonLenientTotal += parseFloat(jailTable)
+                        totalNonLenient.textContent = nonLenientTotal + " Months"
+                    }
+
                     jailTotal +=parseFloat(jailTable)
                     totalMonths.textContent = jailTotal + " Months"
     
@@ -328,15 +368,20 @@ function x() {
             if(vCell.querySelector('.csCell') != null) {
                 // Removes cs from total
                 csValue = vCell.querySelector('.csCell').innerHTML
-                csValue = parseInt(csValue)
+                csValue = parseFloat(csValue)
                 csTotal -= csValue
                 totalcs.textContent = csTotal + " Tasks"
     
                 // Removes jail from total
                 jailValue = vCell.querySelector('.jailCell').innerHTML
-                jailValue = parseInt(jailValue)
+                jailValue = parseFloat(jailValue)
                 jailTotal -= jailValue
                 totalMonths.textContent = jailTotal + " Months"
+
+                if(vCell.querySelector('.nonLenientCell')) {
+                    nonLenientTotal -= jailValue
+                    totalNonLenient.textContent = nonLenientTotal + " Months"
+                }
     
                 // Removes fine from total
                 fineValue = vCell.querySelector('.fineCell').innerHTML
@@ -355,19 +400,23 @@ function x() {
 const clear = document.querySelector(".clear");
 
 clear.addEventListener("click", function(){
-    for (i = 0; i < table.rows.length + 1; i++) {
-        table.deleteRow(1)
-        i = 1
+    if (table.rows.length > 1) {
+        for (i = 0; i < table.rows.length + 1; i++) {
+            table.deleteRow(1)
+            i = 1
 
-        csTotal = 0
-        jailTotal = 0
-        fineTotal = 0
+            csTotal = 0
+            nonLenientTotal = 0
+            jailTotal = 0
+            fineTotal = 0
 
-        totalcs.textContent = csTotal + " Tasks"
-        totalMonths.textContent = jailTotal + " Months"
-        totalFine.textContent = "$" + fineTotal
+            totalcs.textContent = csTotal + " Tasks"
+            totalNonLenient.textContent = nonLenientTotal + " Months"
+            totalMonths.textContent = jailTotal + " Months"
+            totalFine.textContent = "$" + fineTotal
 
-        j--
+            j--
+        }
     }
 })
 

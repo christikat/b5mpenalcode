@@ -158,6 +158,10 @@ p {
     min-height: 6em;
 }
 
+.addon, .lenient {
+    display: none;
+}
+
 .not-lenient {
     font-weight: 500;
 }
@@ -277,10 +281,6 @@ h5 {
 
 .xCell:hover {
     cursor: pointer;
-}
-
-.notlenient-font {
-    color: #E60000;
 }
 
 .center {
